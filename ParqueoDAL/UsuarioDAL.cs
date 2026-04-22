@@ -1,23 +1,22 @@
 ﻿using ParqueoEntidades;
+using ParqueoEntidades;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using ParqueoEntidades;
 
 namespace ParqueoDAL
 {
    
-    // Clase de acceso a datos para la tabla Usuario
-   
+    //Clase de acceso a datos para la tabla Usuario
     public class UsuarioDAL
     {
-       
-        // Busca un usuario activo por login y contraseña encriptada
-        
+
+        //Busca un usuario activo por login y contraseña encriptada
         public Usuario ObtenerPorCredenciales(string login, string passwordEncriptado)
         {
             Usuario usuario = null;
@@ -41,9 +40,25 @@ namespace ParqueoDAL
             return usuario;
         }
 
-       
-        // Retorna todos los usuarios registrados, activos e inactivos
-        
+        //Encriptacion de contraseña usando SHA256
+        public string HashSHA256(string texto)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(texto));
+                StringBuilder builder = new StringBuilder();
+
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
+        }
+
+
+        //Retorna todos los usuarios registrados, activos e inactivos
         public List<Usuario> ObtenerTodos()
         {
             List<Usuario> lista = new List<Usuario>();
@@ -63,7 +78,7 @@ namespace ParqueoDAL
         }
 
    
-        // Inserta un nuevo usuario en la base de datos
+        //Inserta un nuevo usuario en la base de datos
       
         public bool Insertar(Usuario usuario)
         {
@@ -83,14 +98,14 @@ namespace ParqueoDAL
         }
 
        
-        // Actualiza nombre y opcionalmente la contraseña de un usuario.
-        // Si Password viene vacío o null, no se modifica.
+        //Actualiza nombre y opcionalmente la contraseña de un usuario.
+        //Si Password viene vacío o null, no se modifica.
        
         public bool Actualizar(Usuario usuario)
         {
             using (SqlConnection con = Conexion.ObtenerConexion())
             {
-                // Si viene contraseña nueva se actualiza, si no se deja la actual
+                //Si viene contraseña nueva se actualiza, si no se deja la actual
                 string query = string.IsNullOrWhiteSpace(usuario.Password)
                     ? @"UPDATE Usuario SET
                             NombreUsuario = @NombreUsuario
@@ -113,7 +128,7 @@ namespace ParqueoDAL
         }
 
         
-        // Cambia el estado activo/inactivo de un usuario (baja lógica)
+        //Cambia el estado activo/inactivo de un usuario (baja lógica)
        
         public bool CambiarEstado(int idUsuario, bool estado)
         {
@@ -132,7 +147,7 @@ namespace ParqueoDAL
         }
 
 
-        // Verifica si un login ya existe en la base de datos
+        //Verifica si un login ya existe en la base de datos
      
         public bool LoginExiste(string login)
         {
@@ -147,7 +162,7 @@ namespace ParqueoDAL
         }
 
         
-        // mapea una fila del SqlDataReader a un objeto Usuario
+        //mapea una fila del SqlDataReader a un objeto Usuario
       
         private Usuario MapearUsuario(SqlDataReader dr)
         {

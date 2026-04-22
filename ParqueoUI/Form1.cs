@@ -1,13 +1,16 @@
-﻿using System;
+﻿using ParqueoBLL;
+using ParqueoEntidades;
+using ParqueoDAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace ParqueoUI
 {
@@ -26,8 +29,7 @@ namespace ParqueoUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PantallaPrincipal pantallita = new PantallaPrincipal();
-            pantallita.Show();
+            
         }
 
         private void iconButton6_Click(object sender, EventArgs e)
@@ -42,19 +44,20 @@ namespace ParqueoUI
 
         private void textBox1_Enter(object sender, EventArgs e)
         {
-            if(textBox1.Text == "Usuario")
+            if(textBoxUser.Text == "Usuario")
             {
-                textBox1.Text = "";
-                textBox1.ForeColor = Color.Gainsboro;
+                textBoxUser.Text = "";
+                textBoxUser.ForeColor = Color.Gainsboro;
+
             }
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
-            if(textBox1.Text == "")
+            if(textBoxUser.Text == "")
             {
-                textBox1.Text = "Usuario";
-                textBox1.ForeColor = Color.LightGray;
+                textBoxUser.Text = "Usuario";
+                textBoxUser.ForeColor = Color.LightGray;
             }
         }
 
@@ -63,21 +66,13 @@ namespace ParqueoUI
 
         }
 
-        private void textBox2_Leave(object sender, EventArgs e)
-        {
-            if (textBox2.Text == "")
-            {
-                textBox2.Text = "Contraseña";
-                textBox2.ForeColor = Color.LightGray;
-            }
-        }
-
         private void textBox2_Enter(object sender, EventArgs e)
         {
-            if (textBox2.Text == "Contraseña")
+            if (textBoxPassword.Text == "Contraseña")
             {
-                textBox2.Text = "";
-                textBox2.ForeColor = Color.Gainsboro;
+                textBoxPassword.Text = "";
+                textBoxPassword.ForeColor = Color.Gainsboro;
+                textBoxPassword.UseSystemPasswordChar = true;
             }
 
         }
@@ -105,6 +100,51 @@ namespace ParqueoUI
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        //Boton de acceso
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            UsuarioDAL usuarioDAL = new UsuarioDAL();
+            string login = textBoxUser.Text;
+            string password = textBoxPassword.Text;
+
+            //Encriptar contraseña
+            string passwordHash = usuarioDAL.HashSHA256(password);
+
+            Usuario usuario = usuarioDAL.ObtenerPorCredenciales(login, passwordHash);
+
+            if (usuario != null)
+            {
+                MessageBox.Show("Bienvenido " + usuario.NombreUsuario);
+                PantallaPrincipal pantallita = new PantallaPrincipal();
+                pantallita.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Usuario o contraseña incorrectos");
+            }
+        }
+
+        private void textBoxPassword_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_Leave(object sender, EventArgs e)
+        {
+            if (textBoxPassword.Text == "")
+            {
+                textBoxPassword.Text = "Contraseña";
+                textBoxPassword.ForeColor = Color.Gainsboro;
+                textBoxPassword.UseSystemPasswordChar = false;
+            }
+        }
+
+        private void viewPasswordBtn_Click(object sender, EventArgs e)
+        {
+            textBoxPassword.UseSystemPasswordChar = !textBoxPassword.UseSystemPasswordChar;
         }
     }
 }

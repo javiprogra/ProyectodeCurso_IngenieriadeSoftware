@@ -150,6 +150,10 @@
       <Project>{2d3fa951-7595-431a-82fd-4c7f9ec117f3}</Project>
       <Name>ParqueoBLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ParqueoDAL\ParqueoDAL.csproj">
+      <Project>{eb4d0772-5cf9-473e-a7d5-b18f2517548e}</Project>
+      <Name>ParqueoDAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ParqueoEntidades\ParqueoEntidades.csproj">
       <Project>{2a6e5bfa-9da4-43f0-ae17-abbc4712b24e}</Project>
       <Name>ParqueoEntidades</Name>
@@ -175,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\sin fondo3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-eye-60.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

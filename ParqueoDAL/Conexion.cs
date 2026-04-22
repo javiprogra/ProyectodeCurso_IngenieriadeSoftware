@@ -16,7 +16,7 @@ namespace ParqueoDAL
         public class Conexion
         {
             private static string cadena =
-                "Server=TU_SERVIDOR;Database=ParqueoDB;Integrated Security=True;";
+                "Server=localhost\\SQLJAVIDB2026;Database=ParqueoDB;Integrated Security=True;";
 
         
             // Retorna una nueva instancia de SqlConnection abierta
