@@ -57,7 +57,6 @@ namespace ParqueoDAL
             }
         }
 
-
         //Retorna todos los usuarios registrados, activos e inactivos
         public List<Usuario> ObtenerTodos()
         {
@@ -66,6 +65,7 @@ namespace ParqueoDAL
             {
                 string query = @"SELECT IdUsuario, NombreUsuario, Login, Estado
                                  FROM Usuario
+                                 WHERE Estado = 1
                                  ORDER BY NombreUsuario ASC";
 
                 SqlCommand cmd = new SqlCommand(query, con);
@@ -76,10 +76,8 @@ namespace ParqueoDAL
             }
             return lista;
         }
-
-   
+ 
         //Inserta un nuevo usuario en la base de datos
-      
         public bool Insertar(Usuario usuario)
         {
             using (SqlConnection con = Conexion.ObtenerConexion())
@@ -97,7 +95,6 @@ namespace ParqueoDAL
             }
         }
 
-       
         //Actualiza nombre y opcionalmente la contraseña de un usuario.
         //Si Password viene vacío o null, no se modifica.
        
@@ -129,7 +126,6 @@ namespace ParqueoDAL
 
         
         //Cambia el estado activo/inactivo de un usuario (baja lógica)
-       
         public bool CambiarEstado(int idUsuario, bool estado)
         {
             using (SqlConnection con = Conexion.ObtenerConexion())
